@@ -18,8 +18,8 @@
     
     <StackPanel Background="#FFE0E0E0">
     	<Grid>
-    		<Grid Height="40" Margin="0" Background="#FFFF3A00" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40">
-    			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Value}" VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="26.667" FontWeight="Light"/>
+    		<Grid Height="40" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="40">
+    			<TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="{Binding Value}" VerticalAlignment="Center" FontFamily="Segoe UI" FontSize="26.667" FontWeight="Light" Foreground="#FFFF3A00"/>
     		</Grid>
     		<TextBlock TextWrapping="Wrap" Text="{Binding FormattedDate}" Margin="45,0,12,0" Foreground="#FF686868" FontSize="20" FontFamily="Segoe UI" FontWeight="Light" VerticalAlignment="Center"/>
     	</Grid>

@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using WinRTXamlToolkit.Controls.DataVisualization.Charting;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -48,6 +49,24 @@ namespace TrackApp
             Category category2 = new Category { Name = "Pushups" };
             App.model.Categories.Add(category1);
             App.model.Categories.Add(category2);
+
+            last7.Tapped += (a, b) =>
+            {
+                foreach (var child in chartHolder.Children)
+                {
+                    child.Visibility = Visibility.Collapsed;
+                }
+                chart.Visibility = Visibility.Visible;
+            };
+
+            previous7.Tapped += (a, b) =>
+            {
+                foreach (var child in chartHolder.Children)
+                {
+                    child.Visibility = Visibility.Collapsed;
+                }
+                previousChart.Visibility = Visibility.Visible;
+            };
         }
 
         private void addCategory(object sender, Windows.UI.Xaml.RoutedEventArgs e)
@@ -83,6 +102,10 @@ namespace TrackApp
                 var ans = day.Count() == 0 ? 0 : day.Select(k => k.Value).Aggregate((a, b) => a + b);
                 vals2.Add(ans);
             }
+
+
+            vals.Reverse();
+
             chart.Elements = vals;
             chart.Draw();
 
@@ -93,6 +116,8 @@ namespace TrackApp
 
             previousChart.Elements = vals2;
             previousChart.Draw();
+
+            //(cchart.Series[0] as ColumnSeries).ItemsSource = vals;
         }
 
 

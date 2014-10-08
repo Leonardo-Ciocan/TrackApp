@@ -62,7 +62,7 @@ namespace TrackApp
                 var date = DateTime.Now.Subtract(TimeSpan.FromDays(x));
                 var txt = new TextBlock
                 {
-                    Text = date.ToString("ddd"),
+                    Text = date.ToString("ddd") + " " + date.Day,
                     FontSize = 15,
                     Foreground = new SolidColorBrush(Colors.Gray)
                 };
@@ -95,7 +95,7 @@ namespace TrackApp
 
             data.Figures.Add(pathFigure); /* Adding it to path Geometry*/
 
-            for (int x = Elements.Count-2; x >=0 ; x--)
+            for (int x = Elements.Count-2; x>=0 ; x--)
             {
                 Line line = new Line
                 {
