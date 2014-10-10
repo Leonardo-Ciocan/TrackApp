@@ -50,8 +50,25 @@ namespace TrackApp
             App.model.Categories.Add(category1);
             App.model.Categories.Add(category2);
 
-            last7.Tapped += (a, b) =>
+            last7.Tapped += (z, q) =>
             {
+                List<double> vals = new List<double>();
+
+                for (int x = 0; x < 7; x++)
+                {
+                    DateTime date = DateTime.Now.Subtract(TimeSpan.FromDays(x));
+                    var day = App.model.SelectedCategory.Elements.Where(y => (y.Date.DayOfYear == date.DayOfYear));
+                    var ans = day.Count() == 0 ? 0 : day.Select(k => k.Value).Aggregate((a, b) => a + b);
+                    vals.Add(ans);
+                }
+                vals.Reverse();
+
+                txtMax.Text = Math.Round(vals.Max(), 3).ToString();
+                txtMin.Text = Math.Round(vals.Min(), 3).ToString();
+                txtAverage.Text = Math.Round(vals.Average(), 3).ToString();
+
+                chart.Elements = vals;
+                chart.Draw();
                 foreach (var child in chartHolder.Children)
                 {
                     child.Visibility = Visibility.Collapsed;
@@ -59,13 +76,67 @@ namespace TrackApp
                 chart.Visibility = Visibility.Visible;
             };
 
-            previous7.Tapped += (a, b) =>
+            previous7.Tapped += (z, q) =>
             {
+                List<double> vals2 = new List<double>();
+
+
+
+                for (int x = 0; x < 7; x++)
+                {
+                    DateTime date = DateTime.Now.Subtract(TimeSpan.FromDays(7)).Subtract(TimeSpan.FromDays(x));
+                    var day = App.model.SelectedCategory.Elements.Where(y => (y.Date.DayOfYear == date.DayOfYear));
+                    var ans = day.Count() == 0 ? 0 : day.Select(k => k.Value).Aggregate((a, b) => a + b);
+                    vals2.Add(ans);
+                }
+
+
+                txtMax.Text = Math.Round(vals2.Max(), 3).ToString();
+                txtMin.Text = Math.Round(vals2.Min(), 3).ToString();
+                txtAverage.Text = Math.Round(vals2.Average(), 3).ToString();
+
+                vals2.Reverse();
+
+
+
+
+
+                previousChart.Elements = vals2;
+                previousChart.Draw();
                 foreach (var child in chartHolder.Children)
                 {
                     child.Visibility = Visibility.Collapsed;
                 }
                 previousChart.Visibility = Visibility.Visible;
+            };
+
+            last30.Tapped += (z, q) =>
+            {
+                List<double> vals30 = new List<double>();
+                for (int x = 0; x < 30; x++)
+                {
+                    DateTime date = DateTime.Now.Subtract(TimeSpan.FromDays(x));
+                    var day = App.model.SelectedCategory.Elements.Where(y => (y.Date.DayOfYear == date.DayOfYear));
+                    var ans = day.Count() == 0 ? 0 : day.Select(k => k.Value).Aggregate((a, b) => a + b);
+                    vals30.Add(ans);
+                }
+                vals30.Reverse();
+                txtMax.Text = Math.Round(vals30.Max(), 3).ToString();
+                txtMin.Text = Math.Round(vals30.Min(), 3).ToString();
+                txtAverage.Text = Math.Round(vals30.Average(), 3).ToString();
+
+                chart30.Elements = vals30;
+                chart30.Draw();
+
+
+                foreach (var child in chartHolder.Children)
+                {
+                    child.Visibility = Visibility.Collapsed;
+                }
+
+
+
+                chart30.Visibility = Visibility.Visible;
             };
         }
 
@@ -86,7 +157,6 @@ namespace TrackApp
         void updateChart()
         {
             List<double> vals = new List<double>();
-            List<double> vals2 = new List<double>();
 
             for (int x = 0; x < 7; x++)
             {
@@ -95,29 +165,19 @@ namespace TrackApp
                 var ans = day.Count() == 0 ? 0 : day.Select(k => k.Value).Aggregate((a, b) => a + b);
                 vals.Add(ans);
             }
-            for (int x = 0; x < 7; x++)
-            {
-                DateTime date = DateTime.Now.Subtract(TimeSpan.FromDays(7)).Subtract(TimeSpan.FromDays(x));
-                var day = App.model.SelectedCategory.Elements.Where(y => (y.Date.DayOfYear == date.DayOfYear));
-                var ans = day.Count() == 0 ? 0 : day.Select(k => k.Value).Aggregate((a, b) => a + b);
-                vals2.Add(ans);
-            }
-
-
             vals.Reverse();
+
+            txtMax.Text = Math.Round(vals.Max(), 3).ToString();
+            txtMin.Text = Math.Round(vals.Min(), 3).ToString();
+            txtAverage.Text = Math.Round(vals.Average(), 3).ToString();
 
             chart.Elements = vals;
             chart.Draw();
-
-            txtMax.Text = vals.Max().ToString();
-            txtMin.Text = vals.Min().ToString();
-            txtAverage.Text = vals.Average().ToString();
-
-
-            previousChart.Elements = vals2;
-            previousChart.Draw();
-
-            //(cchart.Series[0] as ColumnSeries).ItemsSource = vals;
+            foreach (var child in chartHolder.Children)
+            {
+                child.Visibility = Visibility.Collapsed;
+            }
+            chart.Visibility = Visibility.Visible;
         }
 
 

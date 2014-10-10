@@ -57,9 +57,12 @@
 		</Grid>
 		<Grid Margin="650,0,0,0">
 			<Grid x:Name="chartHolder" Margin="10,121,10,0" Height="278" VerticalAlignment="Top">
-				<local:Chart x:Name="previousChart" Height="278" VerticalAlignment="Top" Color="#FFFF6100" Opacity="1" Visibility="Collapsed"/>
-				<local:Chart x:Name="chart" Height="278" VerticalAlignment="Top" Color="#FFFB6700" Opacity="1"/>
-			</Grid>
+				<local:Chart PreviousChart="True" NumberOfDays="7" x:Name="previousChart" Height="278" VerticalAlignment="Top" Color="#FFFF6100" Opacity="1" Visibility="Collapsed"/>
+				<local:Chart NumberOfDays="7" x:Name="chart" Height="278" VerticalAlignment="Top" Color="#FFFB6700" Opacity="1"/>
+                <local:Chart NumberOfDays="30" x:Name="chart30" Height="278"  
+            VerticalAlignment="Top" Color="#FFFB6700" Opacity="1" Visibility="Collapsed"/>
+
+            </Grid>
 			<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Elements" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Light" FontSize="26.667" Margin="10,10,0,0"/>
 			<Grid HorizontalAlignment="Left" Height="176" VerticalAlignment="Top" Width="341" Margin="10,404,0,0" Background="#FFF1F1F1">
 				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Segoe UI" FontSize="26.667" FontWeight="Light" Margin="10,10,0,0">
@@ -80,7 +83,7 @@
 			</Charting:Chart>
 			<StackPanel Margin="0,50,166,0" Orientation="Horizontal" VerticalAlignment="Top">
 				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="All" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Light" FontSize="22.667" Foreground="#FF636363" Margin="10,0,0,0"/>
-				<TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Last 30 days" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Light" FontSize="22.667" Foreground="#FF636363" Margin="20,0,0,0"/>
+				<TextBlock x:Name="last30" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Last 30 days" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Light" FontSize="22.667" Foreground="#FF636363" Margin="20,0,0,0"/>
 				<TextBlock x:Name="previous7" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Previous 7 days" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Light" FontSize="22.667" Foreground="#FF636363" Margin="20,0,0,0"/>
 				<TextBlock x:Name="last7" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Last 7 days" VerticalAlignment="Top" FontFamily="Segoe UI" FontWeight="Light" FontSize="22.667" Margin="20,0,0,0"/>
 			</StackPanel>

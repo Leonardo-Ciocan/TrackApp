@@ -26,6 +26,8 @@ namespace TrackApp
         public List<double> Elements = new List<double>();
         private Brush _color;
 
+        public int NumberOfDays { get; set; }
+        public bool PreviousChart { get; set; }
 
         public Brush Color
         {
@@ -39,13 +41,13 @@ namespace TrackApp
             SizeChanged += Chart_Loaded;
         }
 
-        void Chart_Loaded(object sender, RoutedEventArgs e)
+        private void Chart_Loaded(object sender, RoutedEventArgs e)
         {
-            double unit = root.ActualWidth/7.0;
+            double unit = root.ActualWidth/NumberOfDays;
             root.Children.Clear();
             uiLayer.Children.Clear();
-            
-            for (int x = 0; x < 7; x++)
+
+            for (int x = 0; x < NumberOfDays; x++)
             {
                 Line line = new Line
                 {
@@ -56,61 +58,64 @@ namespace TrackApp
                     Stroke = new SolidColorBrush(Colors.LightGray),
                     StrokeThickness = 1
                 };
-                
+
                 root.Children.Add(line);
 
                 var date = DateTime.Now.Subtract(TimeSpan.FromDays(x));
+                if (PreviousChart) date = date.Subtract(TimeSpan.FromDays(NumberOfDays));
                 var txt = new TextBlock
                 {
-                    Text = date.ToString("ddd") + " " + date.Day,
-                    FontSize = 15,
+                    Text = NumberOfDays>7 ? date.Day.ToString() : date.ToString("ddd") + " " + date.Day,
+                    FontSize = NumberOfDays>7 ? 8: 15,
                     Foreground = new SolidColorBrush(Colors.Gray)
                 };
-               
+
                 uiLayer.Children.Add(txt);
-                Canvas.SetLeft(txt , ActualWidth - (x+1) * unit);
-                txt.Loaded += (a, b) => Canvas.SetLeft((TextBlock) a, Canvas.GetLeft((TextBlock) a) - ((TextBlock) a).ActualWidth/2.0);
-                Canvas.SetTop(txt,5);
+                Canvas.SetLeft(txt, ActualWidth - (x +  0.5)*(unit));
+                txt.Loaded +=
+                    (a, b) =>
+                        Canvas.SetLeft((TextBlock) a, Canvas.GetLeft((TextBlock) a) - ((TextBlock) a).ActualWidth/2.0);
+                Canvas.SetTop(txt, 5);
             }
             Draw();
         }
 
-        
+
 
         public void Draw()
         {
             if (Elements.Count == 0) return;
-            double unit = ActualWidth / 7.0;
+            double unit = ActualWidth/NumberOfDays;
             valueLayer.Children.Clear();
 
             //Polygon polygon = new Polygon { Fill = new SolidColorBrush(Colors.Gray) , FillRule = FillRule.EvenOdd};
-            Path path = new Path { Fill = new SolidColorBrush(Colors.Gray) };
-            var data = new PathGeometry{FillRule = FillRule.Nonzero};
+            Path path = new Path {Fill = new SolidColorBrush(Colors.Gray)};
+            var data = new PathGeometry {FillRule = FillRule.Nonzero};
             PathFigure pathFigure = new PathFigure();
 
             /*First Point After M is the Start Point*/
-            pathFigure.StartPoint = new Point(ActualWidth , root.ActualHeight);
+            pathFigure.StartPoint = new Point(ActualWidth, root.ActualHeight);
 
             pathFigure.IsClosed = true;
 
             data.Figures.Add(pathFigure); /* Adding it to path Geometry*/
 
-            for (int x = Elements.Count-2; x>=0 ; x--)
+            for (int x = 0; x < Elements.Count; x++)
             {
-                Line line = new Line
+                /* Line line = new Line
                 {
                     X1 = x * unit,
                     X2 = x * unit + unit,
                     Y1 = root.ActualHeight -  ((Elements[x] == 0? 0 : (Elements[x]/Elements.Max()))) * root.ActualHeight,
                     Y2 = root.ActualHeight - ((Elements[x+1] == 0? 0 : (Elements[x+1]/Elements.Max()))) * root.ActualHeight,
                     Stroke = Color,
-                    StrokeThickness = 1
+                    StrokeThickness = 2.5
                 };
                 pathFigure.Segments.Add(new LineSegment {  Point = new Point(line.X1 , line.Y1) });
                 pathFigure.Segments.Add(new LineSegment {  Point =  new Point(line.X2,line.Y2) });
                 Ellipse ellipse = new Ellipse
                 {
-                    Width = 10 , Height = 10 , StrokeThickness = 0 , Fill = Color
+                    Width = 20 , Height = 20 , StrokeThickness = 0 , Fill = Color
 
                 };
                 valueLayer.Children.Add(ellipse);
@@ -135,6 +140,40 @@ namespace TrackApp
             path.Data = data;
            // polygon.Points.Add(new Point(root.ActualHeight, root.ActualWidth));
            // valueLayer.Children.Add(path);
+                * 
+                */
+                double height =  ((Elements[x] == 0 ? 0 : (Elements[x] / Elements.Max()))) * root.ActualHeight;
+                Rectangle rectangle = new Rectangle
+                {
+                    Width = unit,
+                    Height = height,
+                    Fill = new SolidColorBrush(Colors.Orange),
+                    Stroke = new SolidColorBrush(Colors.White),
+                    StrokeThickness = 2.5
+                };
+                 
+                valueLayer.Children.Add(rectangle);
+                Canvas.SetLeft(rectangle , x*unit);
+                Canvas.SetTop(rectangle , root.ActualHeight-height);
+
+                TextBlock block = new TextBlock
+                {
+                    Text = Elements[x].ToString(),
+                    FontSize = NumberOfDays>7?19 : 25,
+                    Foreground = rectangle.Fill
+                };
+                block.Loaded += (a, b) =>
+                {
+                    var bl = a as TextBlock;
+                    Canvas.SetLeft((a as TextBlock), Canvas.GetLeft(bl) - bl.ActualWidth / 2.0);
+                    Canvas.SetTop(bl, Canvas.GetTop(bl) - bl.ActualHeight - 5);
+                };
+                valueLayer.Children.Add(block);
+                Canvas.SetLeft(block , Canvas.GetLeft(rectangle) + unit/2.0);
+                Canvas.SetTop(block,Canvas.GetTop(rectangle));
+
+                
+            }
         }
     }
 }
